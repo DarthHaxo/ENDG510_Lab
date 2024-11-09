@@ -5,10 +5,12 @@ import numpy as np
 
 import os
 import re
-
-def get_next_filename():
+path = r'C:\Users\levis\OneDrive\Documents\School_2024\ENDG_510\New folder\ENDG510_Lab'
+os.chdir(path)
+def get_next_filename(name):
     # Regex pattern to find files with the format 'data_n.csv'
-    pattern = re.compile(r"train_data_(\d+)\.csv")
+
+    pattern = re.compile(name + r"(\d+)\.csv")
     max_n = 0
 
     # Search through files in the current directory
@@ -19,17 +21,16 @@ def get_next_filename():
             max_n = max(max_n, n)
 
     # Create the next filename
-    next_filename = f"data_{max_n + 1}.csv"
+    next_filename = f"{name}_{max_n + 1}.csv"
     return next_filename
 
 # Run the function
-print(get_next_filename())
 
 
 
 # Create an empty Pandas DataFrame
 df = pd.DataFrame(columns=['Temp', 'Humd', 'Label']) # Label: 1 means valid, 0 means invalid
-df = pd.read_csv("data_1.csv")
+df = pd.read_csv("data_attack.csv")
 df.head()
 # next create a socket object
 
@@ -39,19 +40,9 @@ df.head()
 # a forever loop until we interrupt it or
 # an error occurs
 
-i = 1000 # only 10 reading will be taken. Increase it to higher according to youplan.
-while i>=0:
-
-    temp= np.random.rand()*1000
-    hum = np.random.rand()*1000
-    new_data = {
-    'Temp': temp,
-    'Humd': hum,
-    'Label': 0
-    }
-    df = df._append(new_data, ignore_index=True)
-    i = i - 1
+for index, value in df['Temp'].items():
+    df.at[index, 'Temp'] =float( value) +np.random.rand()
 # Close the connection with the client
 #Export data to CSV
-name = get_next_filename()
+name = get_next_filename("data_attack_noisy")
 df.to_csv(name, index=False)
