@@ -41,7 +41,9 @@ df.head()
 # an error occurs
 
 for index, value in df['Temp'].items():
-    df.at[index, 'Temp'] =float( value) +np.random.rand()
+    df.at[index, 'Temp'] =float( value) +(np.random.rand()-0.5)
+for index, value in df['Humd'].items():
+    df.at[index, 'Humd'] =float( value) +(np.random.rand()-0.5)
 # Close the connection with the client
 #Export data to CSV
 name = get_next_filename("data_attack_noisy")
